@@ -3,7 +3,8 @@ from mysql.connector import Error
 from entity.Task_Class import Task
 
 
-"""EXEMPLE REQUETE 
+"""
+EXEMPLE REQUETE 
 
 INSERT INTO task 
 VALUES (1, 'repassage', false);
@@ -91,7 +92,7 @@ class TasksRepository:
     
     def update(self, task_entity):
         """
-        Met à jour un tâche existante et retourne l'entité mise à jour.
+        Met à jour une tâche existante et retourne l'entité mise à jour.
         :param task_entity: Instance de Task contenant les nouvelles données.
         :return: Task après mise à jour, ou None en cas d'erreur.
         """
@@ -119,7 +120,7 @@ class TasksRepository:
     def delete(self, task_id):
         """
         Supprime une tâche par son ID.
-        :param task_id: ID du tâche.
+        :param task_id: ID de la tâche.
         :return: Booléen indiquant si la suppression a été effectuée.
         """
         query = "DELETE FROM task WHERE id = %s"

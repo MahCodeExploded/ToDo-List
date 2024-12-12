@@ -22,7 +22,6 @@ class TodoListApp(QMainWindow):
         #NOTE : désactivé par défaut, il est très agressif
         self.filter_checkbox = QCheckBox("Activation du filtre injection SQL /!\ Attention, aggressif !")
         self.filter_checkbox.setChecked(False)  #Désactivé par défaut
-        #self.filter_checkbox.stateChanged.connect(self.toggle_sql_filter)
         self.layout.addWidget(self.filter_checkbox)
 
         # input field + bouton pour nouvelles tâches
@@ -139,9 +138,16 @@ class TodoListApp(QMainWindow):
         button_id = sender.objectName() #choppe son nom
         task_id = int(button_id.replace("del_", "")) #extrait l'ID du str de son nom
 
-        self.controller.delete_task(task_id) #transmet l'ID au controller
+        delete_status = self.controller.delete_task(task_id) #transmet l'ID au controller
+        if delete_status :
+            self.tasks_layout.removeWidget(task_widget)
+            task_widget.deleteLater()
+        else :
+            QMessageBox.warning(self, "Attention", "Erreur base de données, suppression impossible !")
+            return
+            
 
-        self.tasks_layout.removeWidget(task_widget)
-        task_widget.deleteLater()
+
+        
 
     

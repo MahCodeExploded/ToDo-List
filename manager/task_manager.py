@@ -27,16 +27,30 @@ class List:
             print ("Erreur, la tâche entrée est vide !")     
 
     def show_all_tasks(self) :
+        """
+        demande à la couche repository de transmettre toutes les tâches enregistrées dans la database sous forme de liste.
+        """
         task_list = self.data_base.read_all()
         return task_list
 
     def delete_task(self, task_id):
-        self.data_base.delete(task_id)
+        """
+        demande à la couche repository de supprimer une tâche dans la database
+        """
+        delete_status = self.data_base.delete(task_id)
+        return delete_status
+         
            
     def edit_task (self, task_to_update):
+        """
+        Demande à la couche repository de modifier une tâche dans la database. Même considérations que pour add_task.
+        Note : si l'id de la tâche qu'elle reçoit est négatif et inférieur à -2, cela signifie qu'il faut utiliser le filtre injection SQL.
+        L'id sera ensuite remis à sa valeure correcte si aucune tentative d'injections SQL n'est détectée.
+
+        """
         if task_to_update.title.strip() : #vérifie qu'elle n'est pas vide
 
-            if task_to_update.id <= -2 and self.SQL_validation(task_to_update) :
+            if task_to_update.id <= -2 and self.SQL_validation(task_to_update) : #si l'id est négative et inférieure à -2, cela signifie que la fonction doit faire appel au filtre SQL.
                 print("Alerte injection SQL")
                 return -1
             elif task_to_update.id <= -2 and not self.SQL_validation(task_to_update) :

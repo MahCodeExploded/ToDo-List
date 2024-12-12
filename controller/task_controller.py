@@ -17,4 +17,5 @@ class TaskController :
         return task_list
     
     def delete_task (self, input_task_id) :
-        self.manager.delete_task(input_task_id)
+        delete_status = self.manager.delete_task(input_task_id)
+        return delete_status
