@@ -60,7 +60,6 @@ class TasksRepository:
             cursor = self.connection.cursor(dictionary=True)
             cursor.execute(query)
             tasks = cursor.fetchall() # ca donne un truc comme [{'id': 1, 'title': 'Ménage', 'is_done': 0}, {'id': 2, 'title': 'Repassage', 'is_done': 0}]
-            print (tasks)
             return [Task(
                 task["id"],
                 task["title"],
@@ -91,7 +90,6 @@ class TasksRepository:
             return None
     
     def update(self, task_entity):
-        print(task_entity)
         """
         Met à jour un tâche existante et retourne l'entité mise à jour.
         :param task_entity: Instance de Task contenant les nouvelles données.
@@ -141,16 +139,3 @@ class TasksRepository:
         if self.connection and self.connection.is_connected():
             self.connection.close()
             print("Connexion à la base de données fermée")
-
-
-"""
-TESTS DIVERS :
-"""
-#ga = TasksRepository(host="localhost", database="todotasks", user="myuser", password="mypassword")
-#ga.create(Task(1, "danse", "false"))
-#ga.create(Task(3, "chant", "false"))
-#bu = ga.read_all()
-#print("type de bu : ",type(bu))
-#print(bu[1].title)
-#ga.update(Task(3, "samba", "false"))
-#ga.delete(1)

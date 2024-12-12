@@ -133,8 +133,6 @@ class TodoListApp(QMainWindow):
                 return
             else :                
                 checkbox.setText(new_text.strip())
-                print(new_text.strip())
-                
 
     def _delete_task(self, task_widget):
         sender = self.sender()  # Récupère le bouton qui a émis le signal
