@@ -17,6 +17,14 @@ class TodoListApp(QMainWindow):
         self.setCentralWidget(self.central_widget)
         self.layout = QVBoxLayout(self.central_widget)
 
+        
+        #checkbox pour activer filtre SQL
+        #NOTE : désactivé par défaut, il est très agressif
+        self.filter_checkbox = QCheckBox("Activation du filtre injection SQL /!\ Attention, aggressif !")
+        self.filter_checkbox.setChecked(False)  #Désactivé par défaut
+        #self.filter_checkbox.stateChanged.connect(self.toggle_sql_filter)
+        self.layout.addWidget(self.filter_checkbox)
+
         # input field + bouton pour nouvelles tâches
         self.input_layout = QHBoxLayout()
         self.task_input = QLineEdit()
@@ -54,8 +62,22 @@ class TodoListApp(QMainWindow):
             return
         
         self.task_input.clear()
-        new_task_ID = self.controller.create_task(Task(-1, task_text, False)) #envoie la nouvelle tâche crée à la couche suivante du programme sous forme d'un objet Task, récupère son ID dans la database en retour
-        self._create_task_widget(task_text, new_task_ID)
+
+        #transmet la tâche en signalant s'il faut faire usage du filtre anti-injection SQL (-2) ou non (-1)
+        if self.filter_checkbox.isChecked() : #filtre activé
+            new_task_ID = self.controller.create_task(Task(-2, task_text, False))
+            #Lance l'ajout graphique de la tâche si la BLL n'a pas détecté une tentative d'injection SQL
+            if new_task_ID != -1 :
+                self._create_task_widget(task_text, new_task_ID)
+            else :
+                QMessageBox.warning(self, "Attention", "Tentative d'injection SQL potentielle détectée !")
+                return
+        else : #filtre non activé
+            new_task_ID = self.controller.create_task(Task(-1, task_text, False)) #envoie la nouvelle tâche crée à la couche suivante du programme sous forme d'un objet Task, récupère son ID dans la database en retour
+            self._create_task_widget(task_text, new_task_ID)
+        
+        
+        
 
     #Afficher une tâche dans la liste
     def _create_task_widget(self, task_text, task_id):
@@ -101,12 +123,18 @@ class TodoListApp(QMainWindow):
         sender = self.sender()  # Récupère le bouton qui a émis le signal
         button_id = sender.objectName() #choppe son nom
         task_id = int(button_id.replace("edit_", "")) #extrait l'ID du str de son nom
-
+        if self.filter_checkbox.isChecked() : #si case filtre SQL cochée, modifie l'ID de manière à informer le validateur SQL de s'il doit s'activer ou non.
+            task_id = ((-1 * task_id) - 2) 
         new_text, ok = QInputDialog.getText(self, "Modifier tâche", "Entrez le nouveau texte de la tâche :", text=checkbox.text())
         if ok and new_text.strip():
-            checkbox.setText(new_text.strip())
-            print(new_text.strip())
-            self.controller.update_task(Task(task_id, new_text.strip(), False))
+            modified_task_status = self.controller.update_task(Task(task_id, new_text.strip(), False))
+            if modified_task_status == -1 :#validateur SQL 
+                QMessageBox.warning(self, "Attention", "Tentative d'injection SQL potentielle détectée !")
+                return
+            else :                
+                checkbox.setText(new_text.strip())
+                print(new_text.strip())
+                
 
     def _delete_task(self, task_widget):
         sender = self.sender()  # Récupère le bouton qui a émis le signal

@@ -9,8 +9,9 @@ class TaskController :
         return new_task_id
     
     def update_task (self, modified_task) :
-        self.manager.edit_task(modified_task)
-
+        task_to_modify = self.manager.edit_task(modified_task)
+        return task_to_modify
+    
     def read_all_tasks (self) :
         task_list = self.manager.show_all_tasks()
         return task_list

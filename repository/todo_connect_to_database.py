@@ -70,7 +70,7 @@ class TasksRepository:
             print(f"Erreur lors de la récupération des tâches : {e}")
             return []
     
-    def read_by_id(self, task_id): #TODO : delete this one ?
+    def read_by_id(self, task_id):
         """
         Récupère un tâche par son ID.
         :param task_id: ID tâche.
@@ -113,7 +113,7 @@ class TasksRepository:
             self.connection.commit()
             if cursor.rowcount > 0:
                 return self.read_by_id(task_entity.id)
-            return None
+            return -1
         except Error as e:
             print(f"Erreur lors de la mise à jour de la tâche : {e}")
             return None
