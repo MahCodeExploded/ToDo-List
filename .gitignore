@@ -1,0 +1,7 @@
+__pycache__/
+controller\__pycache__/
+entity\__pycache__/
+manager\__pycache__/
+repository\__pycache__/
+Validators\__pycache__/
+viewer\__pycache__/
