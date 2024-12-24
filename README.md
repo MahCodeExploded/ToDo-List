@@ -1,6 +1,6 @@
 Pour faire marcher ce projet, créer une database MySQL via le sql suivant :
 
-
+- - - - - 
 
 CREATE DATABASE todotasks;
 
@@ -18,6 +18,7 @@ CREATE USER 'myuser'@'localhost' IDENTIFIED BY 'mypassword';
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON todotasks.* TO 'myuser'@'localhost';
 
+- - - - - 
 
 AUTRES NOTES :
 
