@@ -27,4 +27,3 @@ class Validator :
             else : #cas où on ne demande pas l'activation du filtre
                  return False
                 
-                 
