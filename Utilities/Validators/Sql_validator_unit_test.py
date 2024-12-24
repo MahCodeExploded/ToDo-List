@@ -42,5 +42,5 @@ class TestValidator(unittest.TestCase):
         validator = Validator(task)
         self.assertTrue(validator.anti_sql_injection_filter())
 
-if __name__ == "__main__":
+if __name__ == "__main__" :
     unittest.main()
